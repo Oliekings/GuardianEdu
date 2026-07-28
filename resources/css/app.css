@@ -1,0 +1,234 @@
+@import "tailwindcss";
+
+/* ============================================================
+   GuardianEdu — Centralized Design System
+   ============================================================
+   All brand colors, surfaces, and animations are defined here
+   as CSS custom properties. Admin theme overrides are applied
+   at runtime via the useTheme composable on :root.
+   ============================================================ */
+
+@theme {
+  /* ── Primary Brand (default: Indigo) ── */
+  --color-g-primary: #6366f1;
+  --color-g-primary-hover: #818cf8;
+  --color-g-primary-soft: rgba(99, 102, 241, 0.1);
+  --color-g-primary-glow: rgba(99, 102, 241, 0.2);
+
+  /* ── Accent (default: Purple, used for gradients) ── */
+  --color-g-accent: #a855f7;
+  --color-g-accent-soft: rgba(168, 85, 247, 0.1);
+
+  /* ── Semantic Status Colors (fixed — not theme-overridable) ── */
+  --color-g-success: #10b981;
+  --color-g-danger: #f43f5e;
+  --color-g-warning: #f59e0b;
+
+  /* ── Surface / Background ── */
+  --color-g-bg-base: #050505;
+  --color-g-bg-card: rgba(255, 255, 255, 0.03);
+  --color-g-bg-elevated: rgba(255, 255, 255, 0.05);
+  --color-g-bg-input: rgba(0, 0, 0, 0.4);
+
+  /* ── Text Hierarchy ── */
+  --color-g-text: #f3f4f6;
+  --color-g-text-muted: #9ca3af;
+  --color-g-text-faint: #4b5563;
+
+  /* ── Borders ── */
+  --color-g-border: rgba(255, 255, 255, 0.1);
+  --color-g-border-active: rgba(255, 255, 255, 0.2);
+
+  /* ── Radii ── */
+  --radius-g-sm: 0.75rem;
+  --radius-g-md: 1rem;
+  --radius-g-lg: 1.5rem;
+  --radius-g-xl: 2rem;
+  --radius-g-2xl: 2.5rem;
+}
+
+/* ============================================================
+   Global Keyframe Animations
+   ============================================================
+   Moved from scattered scoped <style> blocks into one source.
+   ============================================================ */
+
+@keyframes g-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes g-slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes g-bounce-slow {
+  0%, 100% { transform: translateY(0) rotate(3deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+@keyframes g-glow-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes g-glitch {
+  0% { opacity: 0; transform: translateX(-10%); }
+  2% { opacity: 1; transform: translateX(10%); }
+  4% { opacity: 0; transform: translateX(0); }
+  100% { opacity: 0; }
+}
+
+/* ── Utility Classes ── */
+
+.g-fade-in {
+  animation: g-fade-in 0.5s ease-out forwards;
+}
+
+.g-slide-up {
+  animation: g-slide-up 0.6s ease-out forwards;
+}
+
+.g-bounce-slow {
+  animation: g-bounce-slow 4s ease-in-out infinite;
+}
+
+.g-glow-pulse {
+  animation: g-glow-pulse 3s ease-in-out infinite;
+}
+
+/* ── Global Glass Card Pattern ── */
+.g-card {
+  background: var(--color-g-bg-elevated);
+  border: 1px solid var(--color-g-border);
+  border-radius: var(--radius-g-xl);
+  backdrop-filter: blur(12px);
+}
+
+.g-card-inset {
+  background: var(--color-g-bg-card);
+  border: 1px solid var(--color-g-border);
+  border-radius: var(--radius-g-lg);
+}
+
+/* ── Global Input Pattern ── */
+.g-input {
+  width: 100%;
+  background: var(--color-g-bg-input);
+  border: 1px solid var(--color-g-border);
+  border-radius: var(--radius-g-xl);
+  color: var(--color-g-text);
+  font-size: 0.875rem;
+  padding: 1rem 1.25rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.g-input:focus {
+  border-color: var(--color-g-primary);
+  box-shadow: 0 0 0 3px var(--color-g-primary-soft);
+  outline: none;
+}
+.g-input::placeholder {
+  color: var(--color-g-text-faint);
+}
+
+/* ── Global Button Patterns ── */
+.g-btn-primary {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--color-g-primary);
+  border-radius: var(--radius-g-xl);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: 0 10px 25px -5px var(--color-g-primary-glow);
+  transition: transform 0.15s, background 0.2s;
+  cursor: pointer;
+  border: none;
+}
+.g-btn-primary:hover {
+  transform: scale(1.02);
+  background: var(--color-g-primary-hover);
+}
+.g-btn-primary:active {
+  transform: scale(0.98);
+}
+.g-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.g-btn-secondary {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: var(--color-g-bg-elevated);
+  border: 1px solid var(--color-g-border);
+  border-radius: var(--radius-g-xl);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-g-text-muted);
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.g-btn-secondary:hover {
+  background: var(--color-g-border);
+  color: var(--color-g-text);
+}
+
+.g-btn-danger {
+  padding: 0.75rem 1.5rem;
+  background: var(--color-g-danger);
+  border-radius: var(--radius-g-lg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.g-btn-danger:hover {
+  opacity: 0.9;
+}
+
+/* ── Label Pattern ── */
+.g-label {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--color-g-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Section Header Pattern ── */
+.g-section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-g-text);
+}
+
+/* ── Status Badge Pattern ── */
+.g-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.625rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── Gradient Text ── */
+.g-gradient-text {
+  background: linear-gradient(to right, var(--color-g-primary), var(--color-g-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
