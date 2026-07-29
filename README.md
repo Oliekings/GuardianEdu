@@ -1,22 +1,50 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GuardianEdu
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel‑based school management system.  
+It provides portals for super‑admin, admin, teachers, students, parents, accountants, librarians, receptionists and more, covering attendance, grades, fees, transport, library, inventory, chat, security cams, and CMS.
 
-## About Laravel
+## Features
+- Role‑based portals (Super‑Admin, Admin, Teacher, Student, Parent, Accountant, Librarian, Receptionist)
+- Attendance tracking, behavioural logs, exam scheduling and grading
+- Fee collection, fee groups/types, and financial reporting
+- Transport fleet, route and assignment management
+- Library catalogue, issue/return workflow, inventory management
+- Real‑time chat and camera feeds (Reverb/WebSockets)
+- CMS for school announcements and enquiries
+- Fully API‑driven with Inertia.js + Vue 3 front‑end
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Installation
+```bash
+# Clone the repository
+git clone https://github.com/Oliekings/GuardianEdu.git
+cd GuardianEdu
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
+# Install PHP dependencies
+composer install
+
+# Install JS dependencies
+npm install
+
+# Set up environment file
+cp .env.example .env
+php artisan key:generate
+
+# Run migrations (SQLite used by default; adjust DB settings in .env if needed)
+php artisan migrate
+
+# Build assets
+npm run build
+
+# Serve the application
+php artisan serve
+```
+
+## Contributing
+Contributions are welcome! Please read the [CONTRIBUTING guidelines](CONTRIBUTING.md) (to be added) and follow the standard Laravel contribution process.
+
+## License
+This project is open‑source software licensed under the MIT license.
+
 - [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
