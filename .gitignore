@@ -25,3 +25,4 @@ Thumbs.db
 userslogin.txt
 Next Steps for You.txt
 guardian_edu
+/database/*.sqlite
