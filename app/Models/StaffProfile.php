@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class StaffProfile extends Model
 {
     protected $fillable = [
-        'user_id', 'school_id', 'staff_id', 'designation', 'department', 
-        'joining_date', 'gender', 'dob', 'phone', 'emergency_contact', 
-        'marital_status', 'photo', 'current_address', 'permanent_address', 
-        'qualification', 'work_experience', 'basic_salary', 'epf_no', 
-        'contract_type', 'work_shift', 'bank_account_title', 'bank_account_no', 
-        'bank_name', 'ifsc_code', 'social_media'
+        'user_id', 'school_id', 'staff_id', 'designation', 'department',
+        'joining_date', 'gender', 'dob', 'phone', 'emergency_contact',
+        'marital_status', 'photo', 'current_address', 'permanent_address',
+        'qualification', 'work_experience', 'basic_salary', 'epf_no',
+        'contract_type', 'work_shift', 'bank_account_title', 'bank_account_no',
+        'bank_name', 'ifsc_code', 'social_media',
     ];
 
     protected $casts = [

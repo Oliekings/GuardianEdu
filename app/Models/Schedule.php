@@ -13,7 +13,7 @@ class Schedule extends Model
         'subject_name',
         'day_of_week',
         'start_time',
-        'end_time'
+        'end_time',
     ];
 
     public function cameraFeed()

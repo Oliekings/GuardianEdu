@@ -58,13 +58,16 @@ class Submission extends Model
         if ($this->score === null || $this->max_score === null || $this->max_score === 0) {
             return null;
         }
+
         return round(($this->score / $this->max_score) * 100, 1);
     }
 
     public function letterGrade(): ?string
     {
         $pct = $this->percentage();
-        if ($pct === null) return null;
+        if ($pct === null) {
+            return null;
+        }
 
         return match (true) {
             $pct >= 97 => 'A+',

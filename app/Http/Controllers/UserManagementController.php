@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class UserManagementController extends Controller
 {
@@ -23,7 +23,7 @@ class UserManagementController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -87,7 +87,7 @@ class UserManagementController extends Controller
         abort_unless($user->school_id === Auth::user()->school_id, 403);
         abort_if($user->id === Auth::id(), 422, 'You cannot suspend yourself.');
 
-        $user->update(['is_suspended' => !$user->is_suspended]);
+        $user->update(['is_suspended' => ! $user->is_suspended]);
 
         return redirect()->back()->with('success',
             $user->is_suspended ? 'User suspended.' : 'User reactivated.'

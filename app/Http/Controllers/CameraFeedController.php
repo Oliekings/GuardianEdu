@@ -14,7 +14,7 @@ class CameraFeedController extends Controller
     public function index(Request $request)
     {
         $feeds = CameraFeed::where('is_active', true)->get();
-        
+
         // Filter feeds to only those the user is authorized to view
         $authorizedFeeds = $feeds->filter(function ($feed) {
             return Gate::allows('view', $feed);

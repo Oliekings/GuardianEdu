@@ -19,13 +19,13 @@ class ThemeController extends Controller
         return Inertia::render('Admin/ThemeEditor', [
             'currentTheme' => $theme,
             'defaults' => [
-                'primary'      => '#6366f1',
+                'primary' => '#6366f1',
                 'primaryHover' => '#818cf8',
-                'accent'       => '#a855f7',
-                'bgBase'       => '#050505',
-                'success'      => '#10b981',
-                'danger'       => '#f43f5e',
-                'warning'      => '#f59e0b',
+                'accent' => '#a855f7',
+                'bgBase' => '#050505',
+                'success' => '#10b981',
+                'danger' => '#f43f5e',
+                'warning' => '#f59e0b',
             ],
         ]);
     }
@@ -36,13 +36,13 @@ class ThemeController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'primary'      => 'nullable|string|max:7',
+            'primary' => 'nullable|string|max:7',
             'primaryHover' => 'nullable|string|max:7',
-            'accent'       => 'nullable|string|max:7',
-            'bgBase'       => 'nullable|string|max:7',
-            'success'      => 'nullable|string|max:7',
-            'danger'       => 'nullable|string|max:7',
-            'warning'      => 'nullable|string|max:7',
+            'accent' => 'nullable|string|max:7',
+            'bgBase' => 'nullable|string|max:7',
+            'success' => 'nullable|string|max:7',
+            'danger' => 'nullable|string|max:7',
+            'warning' => 'nullable|string|max:7',
         ]);
 
         $school = Auth::user()->school;

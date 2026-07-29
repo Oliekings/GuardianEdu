@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Announcement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 use Inertia\Inertia;
 
 class AnnouncementController extends Controller
@@ -19,7 +18,7 @@ class AnnouncementController extends Controller
             ->get();
 
         return Inertia::render('Admin/Communication/Announcements', [
-            'announcements' => $announcements
+            'announcements' => $announcements,
         ]);
     }
 
@@ -47,6 +46,7 @@ class AnnouncementController extends Controller
     {
         abort_unless($announcement->school_id === Auth::user()->getScopedSchoolId(), 403);
         $announcement->delete();
+
         return redirect()->back()->with('success', 'Announcement removed.');
     }
 }

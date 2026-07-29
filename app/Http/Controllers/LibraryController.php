@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\LibraryBook;
-use App\Models\LibraryMember;
 use App\Models\LibraryIssue;
+use App\Models\LibraryMember;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +16,7 @@ class LibraryController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $books = LibraryBook::where('school_id', $schoolId)->get();
+
         return Inertia::render('Accountant/Library/Books', ['books' => $books]);
     }
 
@@ -23,8 +24,9 @@ class LibraryController extends Controller
     {
         $request->validate(['title' => 'required|string', 'author' => 'required|string']);
         LibraryBook::create(array_merge($request->all(), [
-            'school_id' => Auth::user()->getScopedSchoolId()
+            'school_id' => Auth::user()->getScopedSchoolId(),
         ]));
+
         return redirect()->back()->with('success', 'Book added to catalog.');
     }
 
@@ -38,7 +40,7 @@ class LibraryController extends Controller
 
         return Inertia::render('Accountant/Library/Members', [
             'members' => $members,
-            'availableUsers' => $availableUsers
+            'availableUsers' => $availableUsers,
         ]);
     }
 
@@ -48,8 +50,9 @@ class LibraryController extends Controller
         LibraryMember::create([
             'school_id' => Auth::user()->getScopedSchoolId(),
             'user_id' => $request->user_id,
-            'library_card_number' => $request->library_card_number
+            'library_card_number' => $request->library_card_number,
         ]);
+
         return redirect()->back()->with('success', 'Library membership activated.');
     }
 
@@ -60,11 +63,11 @@ class LibraryController extends Controller
             ->with(['book', 'member.user'])
             ->where('status', 'issued')
             ->get();
-            
+
         return Inertia::render('Accountant/Library/Issue', [
             'issues' => $issues,
             'books' => LibraryBook::where('school_id', $schoolId)->where('quantity', '>', 0)->get(),
-            'members' => LibraryMember::where('school_id', $schoolId)->with('user')->get()
+            'members' => LibraryMember::where('school_id', $schoolId)->with('user')->get(),
         ]);
     }
 
@@ -87,7 +90,7 @@ class LibraryController extends Controller
             'library_member_id' => $request->library_member_id,
             'issue_date' => now(),
             'due_date' => $request->due_date,
-            'status' => 'issued'
+            'status' => 'issued',
         ]);
 
         $book->decrement('quantity');
@@ -99,7 +102,7 @@ class LibraryController extends Controller
     {
         $issue->update([
             'return_date' => now(),
-            'status' => 'returned'
+            'status' => 'returned',
         ]);
 
         $issue->book()->increment('quantity');

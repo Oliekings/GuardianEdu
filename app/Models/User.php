@@ -136,6 +136,7 @@ class User extends Authenticatable
         if ($this->isSuperAdmin() && session()->has('active_school_id')) {
             return session('active_school_id');
         }
+
         return $this->school_id;
     }
 

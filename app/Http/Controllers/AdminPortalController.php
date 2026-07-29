@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Student;
-use App\Models\School;
-use App\Models\Assignment;
 use App\Models\Announcement;
+use App\Models\Assignment;
 use App\Models\BehavioralLog;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Models\Student;
+use App\Models\Submission;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class AdminPortalController extends Controller
 {
@@ -24,7 +23,7 @@ class AdminPortalController extends Controller
             'total_parents' => User::where('school_id', $schoolId)->where('role', 'parent')->count(),
             'total_users' => User::where('school_id', $schoolId)->count(),
             'total_assignments' => Assignment::where('school_id', $schoolId)->count(),
-            'pending_submissions' => \App\Models\Submission::whereHas('assignment', fn ($q) => $q->where('school_id', $schoolId))
+            'pending_submissions' => Submission::whereHas('assignment', fn ($q) => $q->where('school_id', $schoolId))
                 ->whereNull('graded_at')->count(),
             'attendance_rate' => '94.2%', // Placeholder — in production computed from rfid_taps
             'system_status' => 'Optimum',

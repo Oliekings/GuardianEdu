@@ -52,13 +52,14 @@ class PublicController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $sectors = CmsSector::where('school_id', $schoolId)->get();
+
         return Inertia::render('Admin/CMS/Index', ['sectors' => $sectors]);
     }
 
     public function updateSector(Request $request)
     {
         $request->validate(['key' => 'required', 'content' => 'required|array']);
-        
+
         CmsSector::updateOrCreate(
             ['school_id' => Auth::user()->getScopedSchoolId(), 'key' => $request->key],
             ['content' => $request->content, 'is_visible' => $request->is_visible ?? true]
@@ -71,6 +72,7 @@ class PublicController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $enquiries = LeadEnquiry::where('school_id', $schoolId)->orderBy('created_at', 'desc')->get();
+
         return Inertia::render('Admin/CMS/Enquiries', ['enquiries' => $enquiries]);
     }
 }

@@ -13,14 +13,14 @@ class MessagingController extends Controller
     public function index()
     {
         $schoolId = Auth::user()->getScopedSchoolId();
-        
+
         // Get all users in the same school except self
         $contacts = User::where('school_id', $schoolId)
             ->where('id', '!=', Auth::id())
             ->get(['id', 'name', 'role']);
 
         return Inertia::render('Communication/Chat', [
-            'contacts' => $contacts
+            'contacts' => $contacts,
         ]);
     }
 

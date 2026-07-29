@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\BehavioralLog;
-use App\Models\Student;
 use App\Models\Schedule;
+use App\Models\Student;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class BehavioralController extends Controller
 {
@@ -25,10 +25,10 @@ class BehavioralController extends Controller
         $roomId = $request->query('room_id', $rooms->first() ?? '');
 
         $students = Student::where('school_id', $schoolId)
-            ->when($roomId, fn($q) => $q->where('room_id', $roomId))
+            ->when($roomId, fn ($q) => $q->where('room_id', $roomId))
             ->whereIn('room_id', $rooms)
             ->get()
-            ->map(fn($s) => [
+            ->map(fn ($s) => [
                 'id' => $s->id,
                 'name' => $s->full_name,
                 'admission_number' => $s->admission_number,
@@ -40,14 +40,14 @@ class BehavioralController extends Controller
             ->latest()
             ->limit(15)
             ->get()
-            ->map(fn($l) => [
+            ->map(fn ($l) => [
                 'id' => $l->id,
                 'student' => $l->student->full_name ?? 'Unknown',
                 'type' => $l->type,
                 'category' => $l->category,
                 'points' => $l->points,
                 'description' => $l->description,
-                'date' => $l->created_at->diffForHumans()
+                'date' => $l->created_at->diffForHumans(),
             ]);
 
         return Inertia::render('Teacher/Behavioral/Index', [
@@ -65,7 +65,7 @@ class BehavioralController extends Controller
             'type' => 'required|in:kudos,incident',
             'category' => 'required|string',
             'points' => 'required|numeric',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
         ]);
 
         $validated['teacher_id'] = Auth::id();

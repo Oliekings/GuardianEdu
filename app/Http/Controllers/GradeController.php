@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Grade;
+use App\Models\Schedule;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class GradeController extends Controller
 {
@@ -19,7 +20,7 @@ class GradeController extends Controller
         $schoolId = $user->school_id;
 
         // Get subjects this teacher handles (from their schedules)
-        $subjects = \App\Models\Schedule::where('teacher_id', $user->id)
+        $subjects = Schedule::where('teacher_id', $user->id)
             ->distinct()
             ->pluck('subject_name');
 
@@ -27,7 +28,7 @@ class GradeController extends Controller
         $selectedTerm = $request->get('term', 'Term 1');
 
         // Get rooms this teacher teaches in
-        $rooms = \App\Models\Schedule::where('teacher_id', $user->id)
+        $rooms = Schedule::where('teacher_id', $user->id)
             ->where('subject_name', $selectedSubject)
             ->distinct()
             ->pluck('room_id');

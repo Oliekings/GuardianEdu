@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\BusFleet;
-use App\Models\TransportRoute;
-use App\Models\TransportAssignment;
 use App\Models\Student;
+use App\Models\TransportAssignment;
+use App\Models\TransportRoute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -16,6 +16,7 @@ class TransportController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $fleet = BusFleet::where('school_id', $schoolId)->get();
+
         return Inertia::render('Admin/Transport/Fleet', ['fleet' => $fleet]);
     }
 
@@ -23,8 +24,9 @@ class TransportController extends Controller
     {
         $request->validate(['vehicle_number' => 'required|string|unique:bus_fleets,vehicle_number']);
         BusFleet::create(array_merge($request->all(), [
-            'school_id' => Auth::user()->getScopedSchoolId()
+            'school_id' => Auth::user()->getScopedSchoolId(),
         ]));
+
         return redirect()->back()->with('success', 'Vehicle registered.');
     }
 
@@ -32,6 +34,7 @@ class TransportController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $routes = TransportRoute::where('school_id', $schoolId)->get();
+
         return Inertia::render('Admin/Transport/Routes', ['routes' => $routes]);
     }
 
@@ -39,8 +42,9 @@ class TransportController extends Controller
     {
         $request->validate(['name' => 'required|string', 'monthly_fee' => 'required|numeric']);
         TransportRoute::create(array_merge($request->all(), [
-            'school_id' => Auth::user()->getScopedSchoolId()
+            'school_id' => Auth::user()->getScopedSchoolId(),
         ]));
+
         return redirect()->back()->with('success', 'Route created.');
     }
 
@@ -50,12 +54,12 @@ class TransportController extends Controller
         $assignments = TransportAssignment::where('school_id', $schoolId)
             ->with(['student.user', 'route', 'vehicle'])
             ->get();
-            
+
         return Inertia::render('Admin/Transport/Assign', [
             'assignments' => $assignments,
             'students' => Student::where('school_id', $schoolId)->with('user')->get(),
             'routes' => TransportRoute::where('school_id', $schoolId)->get(),
-            'fleet' => BusFleet::where('school_id', $schoolId)->get()
+            'fleet' => BusFleet::where('school_id', $schoolId)->get(),
         ]);
     }
 

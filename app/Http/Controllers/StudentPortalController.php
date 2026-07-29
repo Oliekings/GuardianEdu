@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Assignment;
-use App\Models\Submission;
-use App\Models\Student;
-use App\Models\Grade;
-use App\Models\BehavioralLog;
 use App\Models\Announcement;
+use App\Models\Assignment;
+use App\Models\Grade;
 use App\Models\Schedule;
+use App\Models\Student;
+use App\Models\Submission;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class StudentPortalController extends Controller
 {
@@ -23,7 +23,7 @@ class StudentPortalController extends Controller
         $user = Auth::user();
         $student = $user->studentRecord;
 
-        if (!$student) {
+        if (! $student) {
             return Inertia::render('Student/Dashboard', [
                 'schedule' => [],
                 'pendingAssignments' => [],
@@ -45,13 +45,14 @@ class StudentPortalController extends Controller
             ->get()
             ->map(function ($s) {
                 $now = now();
-                $start = \Carbon\Carbon::parse($s->start_time);
-                $end = \Carbon\Carbon::parse($s->end_time);
+                $start = Carbon::parse($s->start_time);
+                $end = Carbon::parse($s->end_time);
+
                 return [
                     'id' => $s->id,
                     'name' => $s->subject_name,
                     'room' => $s->room_id,
-                    'time' => $start->format('H:i') . ' - ' . $end->format('H:i'),
+                    'time' => $start->format('H:i').' - '.$end->format('H:i'),
                     'teacher' => $s->teacher?->name ?? 'TBA',
                     'active' => $now->between($start, $end),
                     'completed' => $now->gt($end),
@@ -126,7 +127,7 @@ class StudentPortalController extends Controller
     public function assignments(Request $request)
     {
         $student = Auth::user()->studentRecord;
-        if (!$student) {
+        if (! $student) {
             return Inertia::render('Student/Assignments', ['assignments' => [], 'filters' => []]);
         }
 
@@ -144,6 +145,7 @@ class StudentPortalController extends Controller
 
         $assignments = $query->orderBy('due_at', 'desc')->get()->map(function ($a) use ($student) {
             $submission = $a->submissions()->where('student_id', $student->id)->first();
+
             return [
                 'id' => $a->id,
                 'title' => $a->title,
@@ -183,7 +185,7 @@ class StudentPortalController extends Controller
     public function showAssignment(Assignment $assignment)
     {
         $student = Auth::user()->studentRecord;
-        abort_if(!$student || $assignment->room_id !== $student->room_id, 403);
+        abort_if(! $student || $assignment->room_id !== $student->room_id, 403);
 
         $submission = $assignment->submissions()->where('student_id', $student->id)->first();
 
@@ -222,7 +224,7 @@ class StudentPortalController extends Controller
     public function submitAssignment(Request $request, Assignment $assignment)
     {
         $student = Auth::user()->studentRecord;
-        abort_if(!$student || $assignment->room_id !== $student->room_id, 403);
+        abort_if(! $student || $assignment->room_id !== $student->room_id, 403);
 
         // Check if already submitted
         $existing = $assignment->submissions()->where('student_id', $student->id)->first();
@@ -272,7 +274,7 @@ class StudentPortalController extends Controller
     public function grades()
     {
         $student = Auth::user()->studentRecord;
-        if (!$student) {
+        if (! $student) {
             return Inertia::render('Student/Grades', ['grades' => [], 'gpa' => 0, 'subjects' => []]);
         }
 
@@ -297,6 +299,7 @@ class StudentPortalController extends Controller
         // Group by subject for summary
         $subjects = $grades->groupBy('subject')->map(function ($items, $subject) {
             $avgPct = $items->avg('percentage');
+
             return [
                 'subject' => $subject,
                 'average' => round($avgPct, 1),
@@ -317,7 +320,9 @@ class StudentPortalController extends Controller
      */
     private function autoGradeTest(?array $questions, array $answers): ?int
     {
-        if (!$questions) return null;
+        if (! $questions) {
+            return null;
+        }
 
         $totalMcq = 0;
         $correct = 0;
@@ -335,8 +340,12 @@ class StudentPortalController extends Controller
         }
 
         // If all questions are MCQ, auto-grade. Otherwise return null for manual grading.
-        if ($hasNonMcq) return null;
-        if ($totalMcq === 0) return null;
+        if ($hasNonMcq) {
+            return null;
+        }
+        if ($totalMcq === 0) {
+            return null;
+        }
 
         // Scale to total_points
         return $totalMcq > 0 ? round(($correct / $totalMcq) * 100) : 0;

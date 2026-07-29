@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Announcement;
+use App\Models\Assignment;
+use App\Models\BehavioralLog;
+use App\Models\CameraFeed;
+use App\Models\Grade;
+use App\Models\Schedule;
 use App\Models\School;
 use App\Models\Student;
-use App\Models\CameraFeed;
-use App\Models\Schedule;
-use App\Models\Assignment;
 use App\Models\Submission;
-use App\Models\Grade;
-use App\Models\BehavioralLog;
-use App\Models\Announcement;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -236,7 +236,7 @@ class DatabaseSeeder extends Seeder
                         'An object in motion stays in motion unless acted upon by an external force',
                         'Force equals mass times acceleration',
                         'For every action there is an equal and opposite reaction',
-                        'Energy cannot be created or destroyed'
+                        'Energy cannot be created or destroyed',
                     ],
                     'correct' => 0,
                 ],
@@ -265,7 +265,7 @@ class DatabaseSeeder extends Seeder
                         'A ball rolling down a hill',
                         'A rocket launching (thrust vs. exhaust)',
                         'A car braking to a stop',
-                        'An apple falling from a tree'
+                        'An apple falling from a tree',
                     ],
                     'correct' => 1,
                 ],

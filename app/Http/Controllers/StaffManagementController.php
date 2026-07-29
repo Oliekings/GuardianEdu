@@ -13,7 +13,7 @@ class StaffManagementController extends Controller
     public function index(Request $request)
     {
         $schoolId = Auth::user()->getScopedSchoolId();
-        
+
         $query = StaffProfile::where('school_id', $schoolId)
             ->with('user:id,name,email,role');
 
@@ -21,11 +21,11 @@ class StaffManagementController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('staff_id', 'like', "%{$search}%")
-                  ->orWhere('designation', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($uq) use ($search) {
-                      $uq->where('name', 'like', "%{$search}%")
-                         ->orWhere('email', 'like', "%{$search}%");
-                  });
+                    ->orWhere('designation', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -42,14 +42,14 @@ class StaffManagementController extends Controller
 
         return Inertia::render('Admin/Staff/Index', [
             'staff' => $staff,
-            'filters' => $request->only(['search'])
+            'filters' => $request->only(['search']),
         ]);
     }
 
     public function create()
     {
         $schoolId = Auth::user()->getScopedSchoolId();
-        
+
         // Find users who have staff roles but no profile yet
         $availableUsers = User::where('school_id', $schoolId)
             ->whereIn('role', ['teacher', 'accountant', 'librarian', 'receptionist', 'staff'])
@@ -64,7 +64,7 @@ class StaffManagementController extends Controller
     public function store(Request $request)
     {
         $schoolId = Auth::user()->getScopedSchoolId();
-        
+
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'staff_id' => 'required|string|unique:staff_profiles,staff_id',
@@ -82,7 +82,7 @@ class StaffManagementController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         abort_unless($staff->school_id === $schoolId, 403);
-        
+
         return Inertia::render('Admin/Staff/Edit', [
             'staff' => $staff->load('user:id,name,email,role'),
         ]);
@@ -94,7 +94,7 @@ class StaffManagementController extends Controller
         abort_unless($staff->school_id === $schoolId, 403);
 
         $request->validate([
-            'staff_id' => 'required|string|unique:staff_profiles,staff_id,' . $staff->id,
+            'staff_id' => 'required|string|unique:staff_profiles,staff_id,'.$staff->id,
             'designation' => 'required|string',
         ]);
 
@@ -106,6 +106,7 @@ class StaffManagementController extends Controller
     public function destroy(StaffProfile $staff)
     {
         $staff->delete();
+
         return redirect()->route('admin.staff.index')->with('success', 'Staff profile removed.');
     }
 }

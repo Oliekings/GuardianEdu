@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class LibraryIssue extends Model
 {
     protected $fillable = [
-        'school_id', 'library_book_id', 'library_member_id', 
-        'issue_date', 'due_date', 'return_date', 'status'
+        'school_id', 'library_book_id', 'library_member_id',
+        'issue_date', 'due_date', 'return_date', 'status',
     ];
 
     public function book()

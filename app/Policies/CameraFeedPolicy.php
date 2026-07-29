@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\CameraFeed;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class CameraFeedPolicy
 {

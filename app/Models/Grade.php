@@ -45,7 +45,10 @@ class Grade extends Model
 
     public function percentage(): float
     {
-        if ($this->max_score == 0) return 0;
+        if ($this->max_score == 0) {
+            return 0;
+        }
+
         return round(($this->score / $this->max_score) * 100, 1);
     }
 
@@ -54,7 +57,9 @@ class Grade extends Model
      */
     public static function computeLetterGrade(float $score, float $maxScore): string
     {
-        if ($maxScore == 0) return 'N/A';
+        if ($maxScore == 0) {
+            return 'N/A';
+        }
         $pct = ($score / $maxScore) * 100;
 
         return match (true) {

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use App\Models\Schedule;
 use App\Models\Assignment;
 use App\Models\BehavioralLog;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
+use App\Models\Schedule;
+use App\Models\Student;
+use App\Models\Submission;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class TeacherPortalController extends Controller
 {
@@ -24,12 +25,13 @@ class TeacherPortalController extends Controller
             ->get()
             ->map(function ($s) {
                 $now = now();
-                $start = \Carbon\Carbon::parse($s->start_time);
-                $end = \Carbon\Carbon::parse($s->end_time);
+                $start = Carbon::parse($s->start_time);
+                $end = Carbon::parse($s->end_time);
+
                 return [
                     'id' => $s->id,
                     'name' => $s->subject_name,
-                    'time' => $start->format('H:i') . ' - ' . $end->format('H:i'),
+                    'time' => $start->format('H:i').' - '.$end->format('H:i'),
                     'room' => $s->room_id,
                     'status' => $now->gt($end) ? 'completed' : ($now->between($start, $end) ? 'active' : 'upcoming'),
                 ];
@@ -37,9 +39,9 @@ class TeacherPortalController extends Controller
 
         // Stats
         $totalAssignments = Assignment::where('teacher_id', $user->id)->count();
-        $pendingGrading = \App\Models\Submission::whereHas('assignment', function ($q) use ($user) {
-                $q->where('teacher_id', $user->id);
-            })
+        $pendingGrading = Submission::whereHas('assignment', function ($q) use ($user) {
+            $q->where('teacher_id', $user->id);
+        })
             ->whereNull('graded_at')
             ->count();
 

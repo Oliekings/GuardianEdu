@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assignment;
-use App\Models\Submission;
+use App\Models\Schedule;
 use App\Models\Student;
+use App\Models\Submission;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class AssignmentController extends Controller
 {
@@ -54,7 +55,7 @@ class AssignmentController extends Controller
     public function create()
     {
         return Inertia::render('Teacher/Assignments/Create', [
-            'rooms' => \App\Models\Schedule::where('teacher_id', Auth::id())
+            'rooms' => Schedule::where('teacher_id', Auth::id())
                 ->distinct()
                 ->pluck('room_id'),
         ]);
@@ -116,7 +117,7 @@ class AssignmentController extends Controller
                 'admission_number' => $s->student?->admission_number,
                 'content' => $s->content,
                 'answers' => $s->answers,
-                'file_path' => $s->file_path ? asset('storage/' . $s->file_path) : null,
+                'file_path' => $s->file_path ? asset('storage/'.$s->file_path) : null,
                 'score' => $s->score,
                 'max_score' => $s->max_score,
                 'feedback' => $s->feedback,
@@ -188,7 +189,7 @@ class AssignmentController extends Controller
     {
         abort_unless($assignment->teacher_id === Auth::id(), 403);
 
-        $assignment->update(['is_published' => !$assignment->is_published]);
+        $assignment->update(['is_published' => ! $assignment->is_published]);
 
         return redirect()->back()->with('success',
             $assignment->is_published ? 'Assignment published!' : 'Assignment unpublished.'

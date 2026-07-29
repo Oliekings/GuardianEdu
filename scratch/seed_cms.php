@@ -12,9 +12,9 @@ if ($school) {
             'content' => [
                 'headline' => 'Defining the Academic Era',
                 'subheadline' => 'The ultra-modern behavioral monitoring and academic orchestration ecosystem designed for high-performance institutions. Experience total clarity.',
-                'cta_text' => 'Schedule Visitation'
+                'cta_text' => 'Schedule Visitation',
             ],
-            'is_visible' => true
+            'is_visible' => true,
         ]
     );
 
@@ -25,7 +25,7 @@ if ($school) {
                 'headline' => 'Complete Biometric & Academic Integration',
                 'subheadline' => 'Real-time attendance syncing, dynamic grading scales, and absolute privacy for elite institutions.',
             ],
-            'is_visible' => true
+            'is_visible' => true,
         ]
     );
 }

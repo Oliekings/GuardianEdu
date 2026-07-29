@@ -1,22 +1,41 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\StudentPortalController;
-use App\Http\Controllers\ParentPortalController;
+use App\Http\Controllers\AdminPortalController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AssignmentController;
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\BehavioralController;
+use App\Http\Controllers\CameraFeedController;
+use App\Http\Controllers\ExaminationController;
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\MessagingController;
+use App\Http\Controllers\ParentPortalController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicController;
+use App\Http\Controllers\StaffManagementController;
 use App\Http\Controllers\StudentManagementController;
+use App\Http\Controllers\StudentPortalController;
+use App\Http\Controllers\SuperAdminPortalController;
+use App\Http\Controllers\TeacherPortalController;
+use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\TransportController;
 use App\Http\Controllers\UserManagementController;
-use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', [App\Http\Controllers\PublicController::class, 'landing'])->name('public.landing');
-Route::post('/enquiry', [App\Http\Controllers\PublicController::class, 'submitEnquiry'])->name('public.enquiry');
+Route::get('/', [PublicController::class, 'landing'])->name('public.landing');
+Route::post('/enquiry', [PublicController::class, 'submitEnquiry'])->name('public.enquiry');
 
-Route::get('/dashboard', function (Illuminate\Http\Request $request) {
-    if (!$request->user()) return redirect()->route('login');
-    return redirect()->route($request->user()->role . '.dashboard');
+Route::get('/dashboard', function (Request $request) {
+    if (! $request->user()) {
+        return redirect()->route('login');
+    }
+
+    return redirect()->route($request->user()->role.'.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -25,17 +44,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Camera/IVS API
-    Route::get('/api/camera-feeds', [App\Http\Controllers\CameraFeedController::class, 'index'])->name('api.camera.index');
-    Route::get('/api/camera-feeds/{cameraFeed}', [App\Http\Controllers\CameraFeedController::class, 'show'])->name('api.camera.show');
+    Route::get('/api/camera-feeds', [CameraFeedController::class, 'index'])->name('api.camera.index');
+    Route::get('/api/camera-feeds/{cameraFeed}', [CameraFeedController::class, 'show'])->name('api.camera.show');
 
     // Announcements API
-    Route::get('/api/announcements', [App\Http\Controllers\AnnouncementController::class, 'index'])->name('api.announcements.index');
-    Route::post('/api/announcements', [App\Http\Controllers\AnnouncementController::class, 'store'])->name('api.announcements.store');
+    Route::get('/api/announcements', [AnnouncementController::class, 'index'])->name('api.announcements.index');
+    Route::post('/api/announcements', [AnnouncementController::class, 'store'])->name('api.announcements.store');
 
     // Internal Messaging (Chat)
-    Route::get('/chat', [App\Http\Controllers\MessagingController::class, 'index'])->name('chat.index');
-    Route::get('/api/chat/messages/{contact}', [App\Http\Controllers\MessagingController::class, 'getMessages'])->name('api.chat.messages');
-    Route::post('/api/chat/send', [App\Http\Controllers\MessagingController::class, 'sendMessage'])->name('api.chat.send');
+    Route::get('/chat', [MessagingController::class, 'index'])->name('chat.index');
+    Route::get('/api/chat/messages/{contact}', [MessagingController::class, 'getMessages'])->name('api.chat.messages');
+    Route::post('/api/chat/send', [MessagingController::class, 'sendMessage'])->name('api.chat.send');
 
     // Security Monitoring
     Route::get('/security-cam', function () {
@@ -44,15 +63,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // ── Super Admin Portal ──
     Route::middleware(['role:super_admin'])->prefix('super-admin')->name('super_admin.')->group(function () {
-        Route::get('/dashboard', [App\Http\Controllers\SuperAdminPortalController::class, 'index'])->name('dashboard');
-        Route::post('/switch-school/{school}', [App\Http\Controllers\SuperAdminPortalController::class, 'switchSchool'])->name('switch-school');
+        Route::get('/dashboard', [SuperAdminPortalController::class, 'index'])->name('dashboard');
+        Route::post('/switch-school/{school}', [SuperAdminPortalController::class, 'switchSchool'])->name('switch-school');
     });
 
     // ── Admin Portal ──
     Route::middleware(['role:admin,super_admin'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', [App\Http\Controllers\AdminPortalController::class, 'index'])->name('dashboard');
-        Route::get('/theme', [App\Http\Controllers\ThemeController::class, 'show'])->name('theme.show');
-        Route::put('/theme', [App\Http\Controllers\ThemeController::class, 'update'])->name('theme.update');
+        Route::get('/dashboard', [AdminPortalController::class, 'index'])->name('dashboard');
+        Route::get('/theme', [ThemeController::class, 'show'])->name('theme.show');
+        Route::put('/theme', [ThemeController::class, 'update'])->name('theme.update');
 
         // Student Management
         Route::get('/students', [StudentManagementController::class, 'index'])->name('students.index');
@@ -69,52 +88,52 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/users/{user}/toggle-suspend', [UserManagementController::class, 'toggleSuspend'])->name('users.toggle-suspend');
 
         // Staff Management (HR)
-        Route::get('/staff', [App\Http\Controllers\StaffManagementController::class, 'index'])->name('staff.index');
-        Route::get('/staff/create', [App\Http\Controllers\StaffManagementController::class, 'create'])->name('staff.create');
-        Route::post('/staff', [App\Http\Controllers\StaffManagementController::class, 'store'])->name('staff.store');
-        Route::get('/staff/{staff}/edit', [App\Http\Controllers\StaffManagementController::class, 'edit'])->name('staff.edit');
-        Route::put('/staff/{staff}', [App\Http\Controllers\StaffManagementController::class, 'update'])->name('staff.update');
-        Route::delete('/staff/{staff}', [App\Http\Controllers\StaffManagementController::class, 'destroy'])->name('staff.destroy');
+        Route::get('/staff', [StaffManagementController::class, 'index'])->name('staff.index');
+        Route::get('/staff/create', [StaffManagementController::class, 'create'])->name('staff.create');
+        Route::post('/staff', [StaffManagementController::class, 'store'])->name('staff.store');
+        Route::get('/staff/{staff}/edit', [StaffManagementController::class, 'edit'])->name('staff.edit');
+        Route::put('/staff/{staff}', [StaffManagementController::class, 'update'])->name('staff.update');
+        Route::delete('/staff/{staff}', [StaffManagementController::class, 'destroy'])->name('staff.destroy');
 
-        Route::get('/communication/announcements', [App\Http\Controllers\AnnouncementController::class, 'index'])->name('announcements.index');
-        Route::post('/communication/announcements', [App\Http\Controllers\AnnouncementController::class, 'store'])->name('announcements.store');
-        Route::delete('/communication/announcements/{announcement}', [App\Http\Controllers\AnnouncementController::class, 'destroy'])->name('announcements.destroy');
+        Route::get('/communication/announcements', [AnnouncementController::class, 'index'])->name('announcements.index');
+        Route::post('/communication/announcements', [AnnouncementController::class, 'store'])->name('announcements.store');
+        Route::delete('/communication/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('announcements.destroy');
 
         // Transport Management
-        Route::get('/transport/fleet', [App\Http\Controllers\TransportController::class, 'fleetIndex'])->name('transport.fleet.index');
-        Route::post('/transport/fleet', [App\Http\Controllers\TransportController::class, 'storeFleet'])->name('transport.fleet.store');
-        
-        Route::get('/transport/routes', [App\Http\Controllers\TransportController::class, 'routeIndex'])->name('transport.routes.index');
-        Route::post('/transport/routes', [App\Http\Controllers\TransportController::class, 'storeRoute'])->name('transport.routes.store');
-        
-        Route::get('/transport/assign', [App\Http\Controllers\TransportController::class, 'assignIndex'])->name('transport.assign.index');
-        Route::post('/transport/assign', [App\Http\Controllers\TransportController::class, 'storeAssignment'])->name('transport.assign.store');
+        Route::get('/transport/fleet', [TransportController::class, 'fleetIndex'])->name('transport.fleet.index');
+        Route::post('/transport/fleet', [TransportController::class, 'storeFleet'])->name('transport.fleet.store');
+
+        Route::get('/transport/routes', [TransportController::class, 'routeIndex'])->name('transport.routes.index');
+        Route::post('/transport/routes', [TransportController::class, 'storeRoute'])->name('transport.routes.store');
+
+        Route::get('/transport/assign', [TransportController::class, 'assignIndex'])->name('transport.assign.index');
+        Route::post('/transport/assign', [TransportController::class, 'storeAssignment'])->name('transport.assign.store');
 
         // Examination Hub (Admin)
-        Route::get('/academics/exams', [App\Http\Controllers\ExaminationController::class, 'examIndex'])->name('exams.index');
-        Route::post('/academics/exams', [App\Http\Controllers\ExaminationController::class, 'storeExam'])->name('exams.store');
-        Route::get('/academics/exam-grading', [App\Http\Controllers\ExaminationController::class, 'gradeIndex'])->name('exams.grading.index');
-        Route::post('/academics/exam-grading', [App\Http\Controllers\ExaminationController::class, 'storeGrade'])->name('exams.grading.store');
-        Route::get('/academics/exams/{exam}/schedule', [App\Http\Controllers\ExaminationController::class, 'scheduleIndex'])->name('exams.schedule.index');
-        Route::post('/academics/exams/{exam}/schedule', [App\Http\Controllers\ExaminationController::class, 'storeSchedule'])->name('exams.schedule.store');
+        Route::get('/academics/exams', [ExaminationController::class, 'examIndex'])->name('exams.index');
+        Route::post('/academics/exams', [ExaminationController::class, 'storeExam'])->name('exams.store');
+        Route::get('/academics/exam-grading', [ExaminationController::class, 'gradeIndex'])->name('exams.grading.index');
+        Route::post('/academics/exam-grading', [ExaminationController::class, 'storeGrade'])->name('exams.grading.store');
+        Route::get('/academics/exams/{exam}/schedule', [ExaminationController::class, 'scheduleIndex'])->name('exams.schedule.index');
+        Route::post('/academics/exams/{exam}/schedule', [ExaminationController::class, 'storeSchedule'])->name('exams.schedule.store');
 
         // CMS & Lead Management
-        Route::get('/cms', [App\Http\Controllers\PublicController::class, 'cmsIndex'])->name('cms.index');
-        Route::post('/cms/sector', [App\Http\Controllers\PublicController::class, 'updateSector'])->name('cms.sector.update');
-        Route::get('/enquiries', [App\Http\Controllers\PublicController::class, 'enquiryIndex'])->name('enquiries.index');
+        Route::get('/cms', [PublicController::class, 'cmsIndex'])->name('cms.index');
+        Route::post('/cms/sector', [PublicController::class, 'updateSector'])->name('cms.sector.update');
+        Route::get('/enquiries', [PublicController::class, 'enquiryIndex'])->name('enquiries.index');
     });
 
     // ── Teacher/Staff Portal ──
     Route::middleware(['role:staff,teacher'])->prefix('teacher')->name('staff.')->group(function () {
-        Route::get('/dashboard', [App\Http\Controllers\TeacherPortalController::class, 'index'])->name('dashboard');
-        Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');
-        Route::post('/attendance', [App\Http\Controllers\AttendanceController::class, 'storeAttendance'])->name('attendance.store');
-        Route::get('/behavioral', [App\Http\Controllers\BehavioralController::class, 'index'])->name('behavioral.index');
-        Route::post('/behavioral', [App\Http\Controllers\BehavioralController::class, 'storeBehavioral'])->name('behavioral.store');
+        Route::get('/dashboard', [TeacherPortalController::class, 'index'])->name('dashboard');
+        Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
+        Route::post('/attendance', [AttendanceController::class, 'storeAttendance'])->name('attendance.store');
+        Route::get('/behavioral', [BehavioralController::class, 'index'])->name('behavioral.index');
+        Route::post('/behavioral', [BehavioralController::class, 'storeBehavioral'])->name('behavioral.store');
 
         // Marks Entry
-        Route::get('/marks-entry/{schedule}', [App\Http\Controllers\ExaminationController::class, 'marksIndex'])->name('marks.index');
-        Route::post('/marks-entry', [App\Http\Controllers\ExaminationController::class, 'storeMark'])->name('marks.store');
+        Route::get('/marks-entry/{schedule}', [ExaminationController::class, 'marksIndex'])->name('marks.index');
+        Route::post('/marks-entry', [ExaminationController::class, 'storeMark'])->name('marks.store');
 
         // Assignment Management
         Route::get('/assignments', [AssignmentController::class, 'index'])->name('assignments.index');
@@ -131,57 +150,63 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // ── Accountant Portal ──
     Route::middleware(['role:accountant,super_admin'])->prefix('accountant')->name('accountant.')->group(function () {
-        Route::get('/dashboard', function () { return Inertia::render('Accountant/Dashboard'); })->name('dashboard');
-        
+        Route::get('/dashboard', function () {
+            return Inertia::render('Accountant/Dashboard');
+        })->name('dashboard');
+
         // Fee Management
         Route::prefix('fees')->name('fees.')->group(function () {
-            Route::get('/groups', [App\Http\Controllers\FinanceController::class, 'feeGroupIndex'])->name('groups.index');
-            Route::post('/groups', [App\Http\Controllers\FinanceController::class, 'storeGroup'])->name('groups.store');
-            
-            Route::get('/types', [App\Http\Controllers\FinanceController::class, 'feeTypeIndex'])->name('types.index');
-            Route::post('/types', [App\Http\Controllers\FinanceController::class, 'storeType'])->name('types.store');
-            
-            Route::get('/masters', [App\Http\Controllers\FinanceController::class, 'feeMasterIndex'])->name('masters.index');
-            Route::post('/masters', [App\Http\Controllers\FinanceController::class, 'storeMaster'])->name('masters.store');
+            Route::get('/groups', [FinanceController::class, 'feeGroupIndex'])->name('groups.index');
+            Route::post('/groups', [FinanceController::class, 'storeGroup'])->name('groups.store');
 
-            Route::get('/collect', [App\Http\Controllers\FinanceController::class, 'collectionIndex'])->name('collect.index');
-            Route::get('/collect/{student}', [App\Http\Controllers\FinanceController::class, 'showCollection'])->name('collect.show');
-            Route::post('/collect/{student}', [App\Http\Controllers\FinanceController::class, 'storeDeposit'])->name('collect.store');
+            Route::get('/types', [FinanceController::class, 'feeTypeIndex'])->name('types.index');
+            Route::post('/types', [FinanceController::class, 'storeType'])->name('types.store');
+
+            Route::get('/masters', [FinanceController::class, 'feeMasterIndex'])->name('masters.index');
+            Route::post('/masters', [FinanceController::class, 'storeMaster'])->name('masters.store');
+
+            Route::get('/collect', [FinanceController::class, 'collectionIndex'])->name('collect.index');
+            Route::get('/collect/{student}', [FinanceController::class, 'showCollection'])->name('collect.show');
+            Route::post('/collect/{student}', [FinanceController::class, 'storeDeposit'])->name('collect.store');
 
             // Inventory Management
-            Route::get('/inventory/categories', [App\Http\Controllers\InventoryController::class, 'categoryIndex'])->name('inventory.categories.index');
-            Route::post('/inventory/categories', [App\Http\Controllers\InventoryController::class, 'storeCategory'])->name('inventory.categories.store');
-            
-            Route::get('/inventory/items', [App\Http\Controllers\InventoryController::class, 'itemIndex'])->name('inventory.items.index');
-            Route::post('/inventory/items', [App\Http\Controllers\InventoryController::class, 'storeItem'])->name('inventory.items.store');
-            
-            Route::get('/inventory/suppliers', [App\Http\Controllers\InventoryController::class, 'supplierIndex'])->name('inventory.suppliers.index');
-            Route::post('/inventory/suppliers', [App\Http\Controllers\InventoryController::class, 'storeSupplier'])->name('inventory.suppliers.store');
+            Route::get('/inventory/categories', [InventoryController::class, 'categoryIndex'])->name('inventory.categories.index');
+            Route::post('/inventory/categories', [InventoryController::class, 'storeCategory'])->name('inventory.categories.store');
 
-            Route::get('/inventory/issue', [App\Http\Controllers\InventoryController::class, 'issueIndex'])->name('inventory.issue.index');
-            Route::post('/inventory/issue', [App\Http\Controllers\InventoryController::class, 'storeIssue'])->name('inventory.issue.store');
+            Route::get('/inventory/items', [InventoryController::class, 'itemIndex'])->name('inventory.items.index');
+            Route::post('/inventory/items', [InventoryController::class, 'storeItem'])->name('inventory.items.store');
+
+            Route::get('/inventory/suppliers', [InventoryController::class, 'supplierIndex'])->name('inventory.suppliers.index');
+            Route::post('/inventory/suppliers', [InventoryController::class, 'storeSupplier'])->name('inventory.suppliers.store');
+
+            Route::get('/inventory/issue', [InventoryController::class, 'issueIndex'])->name('inventory.issue.index');
+            Route::post('/inventory/issue', [InventoryController::class, 'storeIssue'])->name('inventory.issue.store');
 
             // Library Management
-            Route::get('/library/books', [App\Http\Controllers\LibraryController::class, 'bookIndex'])->name('library.books.index');
-            Route::post('/library/books', [App\Http\Controllers\LibraryController::class, 'storeBook'])->name('library.books.store');
-            
-            Route::get('/library/members', [App\Http\Controllers\LibraryController::class, 'memberIndex'])->name('library.members.index');
-            Route::post('/library/members', [App\Http\Controllers\LibraryController::class, 'storeMember'])->name('library.members.store');
-            
-            Route::get('/library/issue', [App\Http\Controllers\LibraryController::class, 'issueIndex'])->name('library.issue.index');
-            Route::post('/library/issue', [App\Http\Controllers\LibraryController::class, 'storeIssue'])->name('library.issue.store');
-            Route::post('/library/return/{issue}', [App\Http\Controllers\LibraryController::class, 'returnBook'])->name('library.return');
+            Route::get('/library/books', [LibraryController::class, 'bookIndex'])->name('library.books.index');
+            Route::post('/library/books', [LibraryController::class, 'storeBook'])->name('library.books.store');
+
+            Route::get('/library/members', [LibraryController::class, 'memberIndex'])->name('library.members.index');
+            Route::post('/library/members', [LibraryController::class, 'storeMember'])->name('library.members.store');
+
+            Route::get('/library/issue', [LibraryController::class, 'issueIndex'])->name('library.issue.index');
+            Route::post('/library/issue', [LibraryController::class, 'storeIssue'])->name('library.issue.store');
+            Route::post('/library/return/{issue}', [LibraryController::class, 'returnBook'])->name('library.return');
         });
     });
 
     // ── Librarian Portal ──
     Route::middleware(['role:librarian'])->prefix('librarian')->name('librarian.')->group(function () {
-        Route::get('/dashboard', function () { return Inertia::render('Librarian/Dashboard'); })->name('dashboard');
+        Route::get('/dashboard', function () {
+            return Inertia::render('Librarian/Dashboard');
+        })->name('dashboard');
     });
 
     // ── Receptionist Portal ──
     Route::middleware(['role:receptionist'])->prefix('receptionist')->name('receptionist.')->group(function () {
-        Route::get('/dashboard', function () { return Inertia::render('Receptionist/Dashboard'); })->name('dashboard');
+        Route::get('/dashboard', function () {
+            return Inertia::render('Receptionist/Dashboard');
+        })->name('dashboard');
     });
 
     // ── Parent Portal ──
@@ -198,8 +223,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/assignments/{assignment}', [StudentPortalController::class, 'showAssignment'])->name('assignments.show');
         Route::post('/assignments/{assignment}/submit', [StudentPortalController::class, 'submitAssignment'])->name('assignments.submit');
         Route::get('/grades', [StudentPortalController::class, 'grades'])->name('grades.index');
-        Route::get('/results', [App\Http\Controllers\ExaminationController::class, 'resultsIndex'])->name('results.index');
-        Route::get('/results/{exam}/download', [App\Http\Controllers\ExaminationController::class, 'downloadMarksheet'])->name('results.download');
+        Route::get('/results', [ExaminationController::class, 'resultsIndex'])->name('results.index');
+        Route::get('/results/{exam}/download', [ExaminationController::class, 'downloadMarksheet'])->name('results.download');
     });
 });
 

@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
-use App\Models\Grade;
-use App\Models\BehavioralLog;
 use App\Models\Announcement;
+use App\Models\Grade;
+use App\Models\Student;
 use App\Models\Submission;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class ParentPortalController extends Controller
 {
@@ -101,6 +99,7 @@ class ParentPortalController extends Controller
 
         $subjects = $grades->groupBy('subject')->map(function ($items, $subject) {
             $avgPct = $items->avg('percentage');
+
             return [
                 'subject' => $subject,
                 'average' => round($avgPct, 1),

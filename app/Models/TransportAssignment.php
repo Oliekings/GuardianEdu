@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TransportAssignment extends Model
 {
     protected $fillable = [
-        'school_id', 'student_id', 'transport_route_id', 'bus_fleet_id'
+        'school_id', 'student_id', 'transport_route_id', 'bus_fleet_id',
     ];
 
     public function student()

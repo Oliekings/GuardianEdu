@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Student;
+use App\Models\Attendance;
 use App\Models\Schedule;
+use App\Models\Student;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class AttendanceController extends Controller
 {
     public function index(Request $request)
     {
         $user = Auth::user();
-        
+
         // Rooms this teacher manages
         $rooms = Schedule::where('teacher_id', $user->id)
             ->distinct()
@@ -23,16 +24,16 @@ class AttendanceController extends Controller
         $date = $request->query('date', today()->toDateString());
 
         $students = collect();
-        
+
         if ($selectedRoom) {
             $students = Student::where('school_id', $user->getScopedSchoolId())
                 ->where('room_id', $selectedRoom)
                 ->get()
-                ->map(function($s) use ($date) {
-                    $attendance = \App\Models\Attendance::where('student_id', $s->id)
+                ->map(function ($s) use ($date) {
+                    $attendance = Attendance::where('student_id', $s->id)
                         ->where('date', $date)
                         ->first();
-                    
+
                     return [
                         'id' => $s->id,
                         'name' => $s->full_name,
@@ -56,7 +57,7 @@ class AttendanceController extends Controller
                 'present' => $students->where('status', 'Present')->count(),
                 'absent' => $students->where('status', 'Absent')->count(),
                 'late' => $students->where('status', 'Late')->count(),
-            ]
+            ],
         ]);
     }
 
@@ -74,7 +75,7 @@ class AttendanceController extends Controller
         $schoolId = $user->getScopedSchoolId();
 
         foreach ($request->attendance as $record) {
-            \App\Models\Attendance::updateOrCreate(
+            Attendance::updateOrCreate(
                 [
                     'school_id' => $schoolId,
                     'student_id' => $record['student_id'],

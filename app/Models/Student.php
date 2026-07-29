@@ -113,7 +113,9 @@ class Student extends Model
     public function gpa(): float
     {
         $grades = $this->grades;
-        if ($grades->isEmpty()) return 0.0;
+        if ($grades->isEmpty()) {
+            return 0.0;
+        }
 
         $totalPoints = 0;
         $count = 0;

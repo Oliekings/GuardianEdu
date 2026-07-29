@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('blood_group', 5)->nullable()->after('religion');
             $table->date('admission_date')->nullable()->after('blood_group');
             $table->string('student_image')->nullable()->after('admission_date');
-            
+
             // Parental Info
             $table->string('father_name')->nullable();
             $table->string('father_phone')->nullable();
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('mother_name')->nullable();
             $table->string('mother_phone')->nullable();
             $table->string('mother_occupation')->nullable();
-            
+
             // Guardian Info
             $table->enum('guardian_is', ['father', 'mother', 'other'])->default('father');
             $table->string('guardian_name')->nullable();
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('guardian_email')->nullable();
             $table->string('guardian_relation')->nullable();
             $table->text('guardian_address')->nullable();
-            
+
             $table->boolean('is_active')->default(true);
         });
 
@@ -58,19 +58,19 @@ return new class extends Migration
             $table->text('permanent_address')->nullable();
             $table->text('qualification')->nullable();
             $table->text('work_experience')->nullable();
-            
+
             // Payroll/Finance
             $table->decimal('basic_salary', 15, 2)->default(0);
             $table->string('epf_no')->nullable();
             $table->string('contract_type')->nullable(); // Permanent, Probation
             $table->string('work_shift')->nullable();
-            
+
             // Banking
             $table->string('bank_account_title')->nullable();
             $table->string('bank_account_no')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('ifsc_code')->nullable();
-            
+
             $table->json('social_media')->nullable();
             $table->timestamps();
         });
@@ -81,11 +81,11 @@ return new class extends Migration
         Schema::dropIfExists('staff_profiles');
         Schema::table('students', function (Blueprint $table) {
             $table->dropColumn([
-                'email', 'phone', 'dob', 'gender', 'category', 'religion', 'blood_group', 
-                'admission_date', 'student_image', 'father_name', 'father_phone', 
+                'email', 'phone', 'dob', 'gender', 'category', 'religion', 'blood_group',
+                'admission_date', 'student_image', 'father_name', 'father_phone',
                 'father_occupation', 'mother_name', 'mother_phone', 'mother_occupation',
-                'guardian_is', 'guardian_name', 'guardian_phone', 'guardian_email', 
-                'guardian_relation', 'guardian_address', 'is_active'
+                'guardian_is', 'guardian_name', 'guardian_phone', 'guardian_email',
+                'guardian_relation', 'guardian_address', 'is_active',
             ]);
         });
     }

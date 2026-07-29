@@ -5,8 +5,6 @@ namespace App\Events;
 use App\Models\BusFleet;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -28,7 +26,7 @@ class BusLocationUpdated implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {
@@ -55,9 +53,9 @@ class BusLocationUpdated implements ShouldBroadcast
         return [
             'id' => $this->bus->id,
             'vehicle_number' => $this->bus->vehicle_number,
-            'current_lat' => (float)$this->bus->current_lat,
-            'current_lng' => (float)$this->bus->current_lng,
-            'heading' => (float)$this->bus->heading,
+            'current_lat' => (float) $this->bus->current_lat,
+            'current_lng' => (float) $this->bus->current_lng,
+            'heading' => (float) $this->bus->heading,
             'status' => $this->bus->status,
         ];
     }

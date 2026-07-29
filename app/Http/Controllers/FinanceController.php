@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FeeGroup;
-use App\Models\FeeType;
-use App\Models\FeeMaster;
 use App\Models\FeeDeposit;
+use App\Models\FeeGroup;
+use App\Models\FeeMaster;
+use App\Models\FeeType;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +17,7 @@ class FinanceController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $groups = FeeGroup::where('school_id', $schoolId)->get();
+
         return Inertia::render('Accountant/Fees/Groups', ['groups' => $groups]);
     }
 
@@ -26,8 +27,9 @@ class FinanceController extends Controller
         FeeGroup::create([
             'school_id' => Auth::user()->getScopedSchoolId(),
             'name' => $request->name,
-            'description' => $request->description
+            'description' => $request->description,
         ]);
+
         return redirect()->back()->with('success', 'Fee group created.');
     }
 
@@ -35,6 +37,7 @@ class FinanceController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $types = FeeType::where('school_id', $schoolId)->get();
+
         return Inertia::render('Accountant/Fees/Types', ['types' => $types]);
     }
 
@@ -45,8 +48,9 @@ class FinanceController extends Controller
             'school_id' => Auth::user()->getScopedSchoolId(),
             'name' => $request->name,
             'code' => $request->code,
-            'description' => $request->description
+            'description' => $request->description,
         ]);
+
         return redirect()->back()->with('success', 'Fee type created.');
     }
 
@@ -54,6 +58,7 @@ class FinanceController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $masters = FeeMaster::where('school_id', $schoolId)->with(['group', 'type'])->get();
+
         return Inertia::render('Accountant/Fees/Masters', [
             'masters' => $masters,
             'groups' => FeeGroup::where('school_id', $schoolId)->get(),
@@ -73,8 +78,9 @@ class FinanceController extends Controller
             'fee_group_id' => $request->fee_group_id,
             'fee_type_id' => $request->fee_type_id,
             'amount' => $request->amount,
-            'due_date' => $request->due_date
+            'due_date' => $request->due_date,
         ]);
+
         return redirect()->back()->with('success', 'Fee master configured.');
     }
 
@@ -92,7 +98,7 @@ class FinanceController extends Controller
 
         return Inertia::render('Accountant/Fees/Collect', [
             'students' => $students,
-            'filters' => $request->only(['search'])
+            'filters' => $request->only(['search']),
         ]);
     }
 
@@ -102,7 +108,7 @@ class FinanceController extends Controller
         abort_unless($student->school_id === $schoolId, 403);
 
         $student->load(['room', 'feeGroup.masters.type']);
-        
+
         // Fetch all deposits made by this student
         $deposits = FeeDeposit::where('student_id', $student->id)->with('master.type')->get();
 

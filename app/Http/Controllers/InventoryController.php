@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\InventoryCategory;
 use App\Models\InventoryItem;
 use App\Models\InventorySupplier;
-use App\Models\InventoryIssue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -16,6 +15,7 @@ class InventoryController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $categories = InventoryCategory::where('school_id', $schoolId)->get();
+
         return Inertia::render('Accountant/Inventory/Categories', ['categories' => $categories]);
     }
 
@@ -25,8 +25,9 @@ class InventoryController extends Controller
         InventoryCategory::create([
             'school_id' => Auth::user()->getScopedSchoolId(),
             'name' => $request->name,
-            'description' => $request->description
+            'description' => $request->description,
         ]);
+
         return redirect()->back()->with('success', 'Inventory category created.');
     }
 
@@ -35,9 +36,10 @@ class InventoryController extends Controller
         $schoolId = Auth::user()->getScopedSchoolId();
         $items = InventoryItem::where('school_id', $schoolId)->with('category')->get();
         $categories = InventoryCategory::where('school_id', $schoolId)->get();
+
         return Inertia::render('Accountant/Inventory/Items', [
             'items' => $items,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -49,8 +51,9 @@ class InventoryController extends Controller
             'code' => 'required|string',
         ]);
         InventoryItem::create(array_merge($request->all(), [
-            'school_id' => Auth::user()->getScopedSchoolId()
+            'school_id' => Auth::user()->getScopedSchoolId(),
         ]));
+
         return redirect()->back()->with('success', 'Inventory item registered.');
     }
 
@@ -58,6 +61,7 @@ class InventoryController extends Controller
     {
         $schoolId = Auth::user()->getScopedSchoolId();
         $suppliers = InventorySupplier::where('school_id', $schoolId)->get();
+
         return Inertia::render('Accountant/Inventory/Suppliers', ['suppliers' => $suppliers]);
     }
 
@@ -65,8 +69,9 @@ class InventoryController extends Controller
     {
         $request->validate(['name' => 'required|string', 'phone' => 'nullable']);
         InventorySupplier::create(array_merge($request->all(), [
-            'school_id' => Auth::user()->getScopedSchoolId()
+            'school_id' => Auth::user()->getScopedSchoolId(),
         ]));
+
         return redirect()->back()->with('success', 'Supplier registered.');
     }
 }

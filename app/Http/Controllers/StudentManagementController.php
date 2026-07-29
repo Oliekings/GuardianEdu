@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeeGroup;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-
-use App\Models\FeeGroup;
+use Inertia\Inertia;
 
 class StudentManagementController extends Controller
 {
@@ -26,9 +25,9 @@ class StudentManagementController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('admission_number', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('admission_number', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -118,7 +117,7 @@ class StudentManagementController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'admission_number' => 'required|string|unique:students,admission_number,' . $student->id,
+            'admission_number' => 'required|string|unique:students,admission_number,'.$student->id,
             'guardian_name' => 'required|string',
             'guardian_phone' => 'required|string',
             'fee_group_id' => 'nullable|exists:fee_groups,id',

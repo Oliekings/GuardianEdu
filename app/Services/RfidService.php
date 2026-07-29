@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\Student;
-use App\Models\RfidTap;
 use App\Events\StudentTappedIn;
+use App\Models\RfidTap;
+use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 
 class RfidService
@@ -12,10 +12,7 @@ class RfidService
     /**
      * Handle a student RFID tap action.
      *
-     * @param string $rfidToken
-     * @param int $busId
-     * @param string $action ('tap_in', 'tap_out')
-     * @return RfidTap
+     * @param  string  $action  ('tap_in', 'tap_out')
      */
     public function handleTap(string $rfidToken, int $busId, string $action): RfidTap
     {
