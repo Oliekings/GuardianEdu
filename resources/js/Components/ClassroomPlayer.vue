@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
-import * as IVSPlayer from 'amazon-ivs-player';
 
 const props = defineProps<{
     streamUrl: string;
@@ -9,21 +8,44 @@ const props = defineProps<{
 }>();
 
 const videoElement = ref<HTMLVideoElement | null>(null);
-let player: IVSPlayer.MediaPlayer | null = null;
+let player: any = null;
 const isPlayerReady = ref(false);
 const error = ref<string | null>(null);
 
-onMounted(() => {
-    if (!IVSPlayer.isPlayerSupported) {
-        error.value = "Your browser does not support AWS IVS Video Player.";
+async function loadIVSPlayerScript(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        if ((window as any).IVSPlayer) {
+            resolve();
+            return;
+        }
+        const script = document.createElement('script');
+        script.src = 'https://player.live-video.net/1.31.0/amazon-ivs-player.min.js';
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error('Failed to load Amazon IVS player script'));
+        document.head.appendChild(script);
+    });
+}
+
+onMounted(async () => {
+    try {
+        await loadIVSPlayerScript();
+    } catch (e) {
+        error.value = (e as Error).message;
         return;
     }
 
-    player = IVSPlayer.create({
+    const IVS = (window as any).IVSPlayer;
+    if (!IVS.isPlayerSupported) {
+        error.value = 'Your browser does not support AWS IVS Video Player.';
+        return;
+    }
+
+    player = IVS.create({
         wasmWorker: 'https://web-weaver.amazon-ivs.com/player/1.24.0/amazon-ivs-wasmworker.min.js',
         wasmBinary: 'https://web-weaver.amazon-ivs.com/player/1.24.0/amazon-ivs-wasmworker.min.wasm'
     });
-    
+
     if (videoElement.value) {
         player.attachHTMLVideoElement(videoElement.value);
         player.load(props.streamUrl);

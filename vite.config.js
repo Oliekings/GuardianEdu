@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     optimizeDeps: {
         include: ['lodash-es'],
+        exclude: ['amazon-ivs-player']
     },
     resolve: {
         alias: {
@@ -14,11 +15,15 @@ export default defineConfig({
         },
     },
     server: {
-        host: '127.0.0.1',
+        host: true,
         port: 5173,
         strictPort: true,
+        cors: true,
+        origin: 'http://localhost:5173',
         hmr: {
-            host: '127.0.0.1',
+            host: 'localhost',
+            clientPort: 5173,
+            protocol: 'ws',
         },
     },
     plugins: [

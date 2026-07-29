@@ -1,0 +1,104 @@
+services:
+  # MySQL database (use SQLite for local dev if preferred)
+  db:
+    image: mysql:8.0
+    container_name: guardian_edu_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: secret_root
+      MYSQL_DATABASE: guardian_edu
+      MYSQL_USER: guardian_user
+      MYSQL_PASSWORD: secret_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # PHP application (Laravel)
+  app:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: guardian_edu_app
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_DATABASE: guardian_edu
+      DB_USERNAME: guardian_user
+      DB_PASSWORD: secret_pass
+      APP_ENV: local
+      APP_DEBUG: true
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_KEY: localkey123
+      REVERB_HOST: 0.0.0.0
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
+      VITE_REVERB_APP_KEY: "${REVERB_APP_KEY}"
+      VITE_REVERB_HOST: "localhost"
+      VITE_REVERB_PORT: "6001"
+      VITE_REVERB_SCHEME: "${REVERB_SCHEME}"
+# ports removed
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - app-network
+    working_dir: /var/www/html
+    command: sh -c "composer install && php artisan key:generate && php artisan migrate && php-fpm"
+
+  # Nginx web server
+  nginx:
+    image: nginx:stable-alpine
+    container_name: guardian_edu_nginx
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - app-network
+
+  # Node container for front‑end assets (Vite)
+  node:
+    build:
+      context: .
+      dockerfile: ./docker/node/Dockerfile
+    container_name: guardian_edu_node
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - app-network
+
+  reverb:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: guardian_edu_reverb
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    command: sh -c "php artisan reverb:start --host=0.0.0.0 --port=8080"
+    ports:
+      - "6001:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local

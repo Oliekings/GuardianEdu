@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\FeeGroup;
 
 class Student extends Model
 {
@@ -78,6 +79,11 @@ class Student extends Model
     public function schedules(): HasMany
     {
         return $this->hasMany(Schedule::class, 'room_id', 'room_id');
+    }
+    
+    public function feeGroup(): BelongsTo
+    {
+        return $this->belongsTo(FeeGroup::class, 'fee_group_id');
     }
 
     public function submissions(): HasMany

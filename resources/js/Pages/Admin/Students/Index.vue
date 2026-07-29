@@ -77,7 +77,7 @@ const deleteStudent = (id: number) => {
                                     <td class="p-4"><span v-if="s.room_id" class="g-badge bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">{{ s.room_id }}</span><span v-else class="text-gray-600">—</span></td>
                                     <td class="p-4 text-xs text-gray-500">{{ s.user_email || 'No account' }}</td>
                                     <td class="p-4">
-                                        <div v-if="s.parents.length" class="flex flex-wrap gap-1">
+                                        <div v-if="s.parents && s.parents.length" class="flex flex-wrap gap-1">
                                             <span v-for="p in s.parents" :key="p.id" class="px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">{{ p.name }}</span>
                                         </div>
                                         <span v-else class="text-gray-600 text-xs">None linked</span>

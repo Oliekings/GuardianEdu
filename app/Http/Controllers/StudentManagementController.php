@@ -45,6 +45,7 @@ class StudentManagementController extends Controller
             'fee_group' => $s->feeGroup?->name,
             'is_active' => $s->is_active,
             'user_email' => $s->user?->email,
+            'parents' => $s->parents->map(fn($p) => ['id' => $p->id, 'name' => $p->name]),
         ]);
 
         $rooms = Student::where('school_id', $schoolId)
