@@ -1,87 +1,114 @@
-# GuardianEdu
+# GuardianEdu — Run Your School Like One Connected System 🎓🚀
 
-A comprehensive Laravel‑based school management system.  
-It provides portals for super‑admin, admin, teachers, students, parents, accountants, librarians, receptionists and more, covering attendance, grades, fees, transport, library, inventory, chat, security cams, and CMS.
+<p center>
+  <img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=28&pause=1000&color=FFC94A&center=true&vCenter=true&width=700&lines=Run+your+school+like+one+connected+system;Attendance+%7C+Fees+%7C+Grades+%7C+Transport+%7C+Security" alt="Typing SVG" />
+</p>
 
-## Features
-- Role‑based portals (Super‑Admin, Admin, Teacher, Student, Parent, Accountant, Librarian, Receptionist)
-- Attendance tracking, behavioural logs, exam scheduling and grading
-- Fee collection, fee groups/types, and financial reporting
-- Transport fleet, route and assignment management
-- Library catalogue, issue/return workflow, inventory management
-- Real‑time chat and camera feeds (Reverb/WebSockets)
-- CMS for school announcements and enquiries
-- Fully API‑driven with Inertia.js + Vue 3 front‑end
+<p center>
+  <a href="https://surprisemfstech.com"><img src="https://img.shields.io/badge/Built%20By-Surprise%20MFs%20Tech-FFC94A?style=for-the-badge&labelColor=12163B" alt="Built By Surprise MFs Tech"></a>
+  <a href="#-key-capabilities--portals"><img src="https://img.shields.io/badge/Portals-8%20Integrated-2FD9B0?style=for-the-badge&labelColor=12163B" alt="8 Integrated Portals"></a>
+  <a href="#-why-guardianedu-hits-different"><img src="https://img.shields.io/badge/Architecture-Real--Time%20WebSockets-4EA8FF?style=for-the-badge&labelColor=12163B" alt="Real-Time Architecture"></a>
+  <a href="https://surprisemfstech.com"><img src="https://img.shields.io/badge/Status-Production--Ready-FF6B5D?style=for-the-badge&labelColor=12163B" alt="Status"></a>
+</p>
 
-## Installation
-```bash
-# Clone the repository
-git clone https://github.com/Oliekings/GuardianEdu.git
-cd GuardianEdu
+---
 
-# Install PHP dependencies
-composer install
+### ⚡ Live Campus Activity Stream
 
-# Install JS dependencies
-npm install
-
-# Set up environment file
-cp .env.example .env
-php artisan key:generate
-
-# Run migrations (SQLite used by default; adjust DB settings in .env if needed)
-php artisan migrate
-
-# Build assets
-npm run build
-
-# Serve the application
-php artisan serve
+```m
+ 🟢 [LIVE TICKER]  
+ ├─ 🚪 Front desk: Checked in visitor
+ ├─ 📝 Mrs. Adeyemi: Marked Grade 6 attendance
+ ├─ 💳 System: Fee payment received → PDF Receipt generated
+ ├─ 🚌 Bus 3: Arrived at Wuse stop
+ ├─ 📚 Library: Book returned (0 overdue fines)
+ └─ 🏷️ RFID Gate: Student checked in via Smart Tap
 ```
 
-## Contributing
-Contributions are welcome! Please read the [CONTRIBUTING guidelines](CONTRIBUTING.md) (to be added) and follow the standard Laravel contribution process.
+---
 
-## License
-This project is open‑source software licensed under the MIT license.
+## 🌟 What is GuardianEdu?
 
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Most school software feels like a static 2005 database with a login form. **GuardianEdu is alive.** 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Built by **[Surprise MFs Tech](https://surprisemfstech.com)**, GuardianEdu unifies six disconnected school tools—attendance, billing, grading, transport, library, and gate security—into **one single real-time operational core**.
 
-## Learning Laravel
+<br/>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🔑 Key Portals & Role Views
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Every user logs in to **exactly** what they need to see. Zero training, zero friction.
 
-## Laravel Sponsors
+<table>
+  <tr>
+    <td width="50%" bgcolor="#1B2050">
+      <h3 align="center">👑 Admin Portal</h3>
+      <p>Full bird's-eye view of staff, students, finances, and operational analytics from one command dashboard.</p>
+    </td>
+    <td width="50%" bgcolor="#1B2050">
+      <h3 align="center">✍️ Teacher Portal</h3>
+      <p>Fast attendance marking, instant grade entries, and quick behavior logs from any phone or tablet.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" bgcolor="#1B2050">
+      <h3 align="center">👁️ Parent Portal</h3>
+      <p>Live visibility into real-time attendance, fee balances, and report cards. No more office calling.</p>
+    </td>
+    <td width="50%" bgcolor="#1B2050">
+      <h3 align="center">📋 Student Portal</h3>
+      <p>Single hub for assignment downloads, submission deadlines, and personal academic progress.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" bgcolor="#1B2050">
+      <h3 align="center">₦ Accountant Portal</h3>
+      <p>Automated, audit-ready fee processing, instant digital receipts, and real-time ledger updates.</p>
+    </td>
+    <td width="50%" bgcolor="#1B2050">
+      <h3 align="center">📚 Library Portal</h3>
+      <p>Streamlined book checkout and return workflow with automatic fine tracking.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" bgcolor="#1B2050">
+      <h3 align="center">☎️ Front Desk Portal</h3>
+      <p>Digital visitor logs, inquiry management, and guest passes—ditch the paper logbook.</p>
+    </td>
+    <td width="50%" bgcolor="#1B2050">
+      <h3 align="center">📹 Security Portal</h3>
+      <p>Live gate camera feeds and RFID tap-in / tap-out logs so campus safety is never guessed.</p>
+    </td>
+  </tr>
+</table>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🚀 Why GuardianEdu Hits Different
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│ REAL-TIME SYNC  │ Instant updates via WebSockets without page refreshes.         │
+├─────────────────┼───────────────────────────────────────────────────────────────┤
+│ SINGLE TRUTH    │ One database. Zero month-end spreadsheet reconciliations.      │
+├─────────────────┼───────────────────────────────────────────────────────────────┤
+│ RFID SMART TAP  │ Instant entry/exit tap-in replaces manual roll calls.          │
+├─────────────────┼───────────────────────────────────────────────────────────────┤
+│ LIVE BUS GPS    │ Parents track school bus locations on live routes.            │
+├─────────────────┼───────────────────────────────────────────────────────────────┤
+│ AUTO DOCUMENTS  │ Instant PDF report cards, statements, and payment receipts.   │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🎯 Designed For
 
-## Code of Conduct
+> **Private & Independent K–12 Schools (Single or Multi-Campus)**  
+> Built for institutions ready to stop running on fragmented, outdated software and move to a unified modern stack.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<p center>
+  <sub>Crafted with 🔥 by <a href="https://surprisemfstech.com"><b>Surprise MFs Tech</b></a></sub>
+</p>
